@@ -35,13 +35,19 @@ public class RedisRepository {
     }
 
     private CompletionStage<Boolean> incrHeroInTops(StatItem statItem) {
-        // TODO
+        StatefulRedisConnection<String, String> redis_Connection = redisClient.connect();
+        RedisCommands<String, String> redis_Commands = connection.sync();
+        redis_Commands.zaddincr("tops_heroes", 1, statItem.toJson().toString());
+        redis_Connection.close();
         return CompletableFuture.completedFuture(true);
     }
 
 
     private CompletionStage<Long> addHeroAsLastVisited(StatItem statItem) {
-        // TODO
+        StatefulRedisConnection<String, String> redis_Connection = redisClient.connect();
+        RedisCommands<String, String> redis_Commands = connection.sync();
+        redis_Commands.zadd("last_heroes", new Timestamp(System.currentTimeMillis()).getTime(), statItem.toJson().toString());
+        redis_Connection.close();
         return CompletableFuture.completedFuture(1L);
     }
 
